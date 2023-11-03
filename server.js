@@ -1,16 +1,17 @@
 const express = require("express");
 const { Web3 } = require("web3");
-const app = express();
-const port = 3001;
+
+const port = process.env.PORT;
 require("dotenv").config();
-// Replace with your Alchemy API key
+
+
 const alchemyApiKey = process.env.API_KEY;
-const contractAddress = process.env.ADDRESS; // Replace with your contract's address
+const contractAddress = process.env.ADDRESS;
+
 const contractAbi = JSON.parse(
   '[{"type":"constructor","payable":false,"inputs":[{"type":"uint256","name":"_duration"},{"type":"uint256","name":"_stake"}]},{"type":"event","anonymous":false,"name":"ConsensusReached","inputs":[]},{"type":"event","anonymous":false,"name":"FundsBurned","inputs":[]},{"type":"event","anonymous":false,"name":"FundsReturned","inputs":[]},{"type":"event","anonymous":false,"name":"TaskCompleted","inputs":[]},{"type":"function","name":"burnFunds","constant":false,"payable":false,"inputs":[],"outputs":[]},{"type":"function","name":"confirmTaskCompleted","constant":false,"payable":false,"inputs":[],"outputs":[]},{"type":"function","name":"confirmations","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"address"}],"outputs":[{"type":"bool"}]},{"type":"function","name":"consensusReached","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"bool"}]},{"type":"function","name":"creator","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"address"}]},{"type":"function","name":"deadline","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"uint256"}]},{"type":"function","name":"returnFunds","constant":false,"payable":false,"inputs":[],"outputs":[]},{"type":"function","name":"taskCompleted","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"bool"}]},{"type":"function","name":"taskStake","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"uint256"}]}]'
 );
 
-// Initialize a Web3 instance with Alchemy's provider
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
@@ -18,10 +19,10 @@ const web3 = new Web3(
   )
 );
 
-// Create a contract instance
+
 const contract = new web3.eth.Contract(contractAbi, contractAddress);
 
-// Define API routes for interacting with the contract
+const app = express();
 app.get("/checkTaskCompletion/:address", async (req, res) => {
   const userAddress = req.params.address;
   try {
@@ -66,7 +67,8 @@ app.post("/confirmTaskCompletion/:address", async (req, res) => {
   }
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+
+
+app.listen(process.env.PORT, () => {
+  console.log("Server is running on port");
 });
